@@ -1,0 +1,26 @@
+{
+  "name": "u2fdemo",
+  "version": "1.0.0",
+  "description": "",
+  "main": "main.js",
+  "dependencies": {
+    "asn1js": "^2.0.15",
+    "immutable": "^3.8.1",
+    "react": "^15.6.1",
+    "react-dom": "^15.6.1"
+  },
+  "devDependencies": {
+    "babel-core": "^6.26.0",
+    "babel-loader": "^7.1.2",
+    "babel-preset-es2015": "^6.24.1",
+    "babel-preset-react": "^6.24.1",
+    "webpack": "^3.5.4"
+  },
+  "scripts": {
+    "test": "npm test",
+    "watch": "webpack --watch",
+    "build": "webpack"
+  },
+  "author": "Mark Percival <m@mdp.im>",
+  "license": "MIT"
+}
