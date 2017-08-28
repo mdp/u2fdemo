@@ -10,10 +10,12 @@ export default class App extends React.Component {
     this.state = {
       registration: {
         appId,
-        challenge: 'MyChallenge',
-        regResponse: null
+        challenge: 'RegisterChallenge',
+        regResponse: null,
+        parsedResponse: null
       },
       signing: {
+        appId,
         keyHandle: '',
         challenge: 'SigningChallenge',
       }
@@ -53,6 +55,7 @@ export default class App extends React.Component {
         console.log(u2fUtils.parseRegistration(deviceResponse))
         let registration = Object.assign({}, this.state.registration)
         registration['response'] = deviceResponse
+        registration['parsedResponse'] = u2fUtils.parseRegistration(deviceResponse)
         this.setState({registration})
       }, 30
     )

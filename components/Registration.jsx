@@ -8,6 +8,10 @@ export default class Registration extends React.Component {
     }
   }
 
+  keyHandle() {
+    return Buffer.from(this.props.parsedResponse.keyHandle).toString('base64')
+  }
+
   render() {
     console.log(this.props)
     return (
@@ -17,6 +21,14 @@ export default class Registration extends React.Component {
         <input type="text" value={this.props.challenge} name="challenge" className="form-control" onChange={this.props.onUpdate}/>
         <button onClick={this.props.onRegister} > Register </button>
         <pre><code>{this.prettyRawResponse()}</code></pre>
+        <table class="table">
+          <tbody>
+            <tr>
+              <td><b>Key Handle</b></td>
+              <td>{this.keyHandle()}</td>
+            </tr>
+          </tbody>
+        </table>
       </div>)
   }
 }
