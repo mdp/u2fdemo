@@ -1,0 +1,7 @@
+language: node_js # don't install any environment
+
+script: bash ./deploy.sh
+env:
+  global:
+  - ENCRYPTION_LABEL: "269f4ed9606d"
+  - COMMIT_AUTHOR_EMAIL: "m@mdp.im"

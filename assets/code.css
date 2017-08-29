@@ -1,0 +1,20 @@
+pre {
+  display: inline-block;
+  width: 100%;
+  padding: 1.4em;
+  font: 1rem Consolas, "Liberation Mono", Menlo, Courier, monospace;
+  font-size: 14px;
+  font-size: 0.9rem;
+  line-height: 1.45;
+  word-wrap: normal;
+
+  color: #567482;
+  background-color: #f8f8f8;
+
+  border: solid 1px #dce6f0;
+  border-radius: 0.3rem;
+  border-color: rgba(222,229,231,0.6);
+
+  overflow-x: scroll;
+  overflow-y: scroll;
+}
