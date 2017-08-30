@@ -4,6 +4,11 @@ import Code from './Code.jsx'
 import JSONList from './JSONList.jsx'
 import styles from '../assets/layout.css'
 
+const errorCodes = {
+  2: 'Bad Request',
+  5: 'Timeout'
+}
+
 export default class Registration extends React.Component {
 
   prettyRawResponse() {
@@ -14,16 +19,13 @@ export default class Registration extends React.Component {
     }
   }
 
-  SampleRequest() {
-    return (`let registerRequest = {
-  challenge: '${this.props.challenge}',
-  version: 'U2F_V2'
-}
-u2f.register(${this.props.appId}, [registerRequest], [],
-  (response) => {
-    console.log("Send 'response' to the server")
-  }
-)`)
+  // Scroll down to the results when they change
+  componentDidUpdate(prevProps) {
+    if (this.refs['regResult']) {
+      if (!prevProps.response || prevProps.response.registrationData !== this.props.response.registrationData){
+        this.refs['regResult'].scrollIntoView({block: 'end', behavior: 'smooth'})
+      }
+    }
   }
 
   Button() {
@@ -36,19 +38,38 @@ u2f.register(${this.props.appId}, [registerRequest], [],
     }
   }
 
-  Output() {
-    if (!this.props.parsedResponse) { return false }
-    return (
-      <div>
-        <h4>Response</h4>
-        <Code output={JSON.stringify(this.props.response, null, 2)} />
-        <h4>registrationData Decoded</h4>
-        <p><small>Decode detailed <a href="https://fidoalliance.org/specs/fido-u2f-v1.0-nfc-bt-amendment-20150514/fido-u2f-raw-message-formats.html#registration-response-message-success">here (fidoalliance.org)</a></small></p>
-        <JSONList data={this.props.parsedResponse}/>
-        <h4>clientData Decoded</h4>
-        <JSONList data={JSON.parse(b64d(this.props.response.clientData))} />
-      </div>
-    )
+  Result() {
+    // Error response
+    if (this.props.response && this.props.response.errorCode) {
+      let errorCode = this.props.response.errorCode
+      return (
+        <div>
+          <h4 ref={'regResult'}>Response</h4>
+          <Code output={JSON.stringify(this.props.response, null, 2)} />
+          <h4>Error</h4>
+          <p>ErrorCode: {errorCode}
+            {errorCodes[errorCode] ? ` - ${errorCodes[errorCode]}` : ''}
+          </p>
+        </div>
+      )
+    } else if(this.props.response) {
+      return (
+        <div>
+          <h4 ref={'regResult'}>Response</h4>
+          <Code output={JSON.stringify(this.props.response, null, 2)} />
+          <h4>Response Decoded</h4>
+          <h5><var>registrationData</var></h5>
+          <div className="card">
+            <JSONList data={this.props.parsedResponse}/>
+            <p><small>Decode details can be found at <a target='_blank' href="https://fidoalliance.org/specs/fido-u2f-v1.0-nfc-bt-amendment-20150514/fido-u2f-raw-message-formats.html">fidoalliance.org</a></small></p>
+          </div>
+          <h5><var>clientData</var></h5>
+          <div className="card">
+            <JSONList data={JSON.parse(b64d(this.props.response.clientData))} />
+          </div>
+        </div>
+      )
+    }
   }
 
 
@@ -76,7 +97,21 @@ u2f.register(${this.props.appId}, [registerRequest], [],
         </div>
         <h4>Sample JS for Request</h4>
         <Code output={this.SampleRequest()} />
-        {this.Output()}
+        {this.Result()}
       </div>)
   }
+
+  // Place this at the bottom since it breaks my code highlighter
+  SampleRequest() {
+    return (`let registerRequest = {
+  challenge: '${this.props.challenge}',
+  version: 'U2F_V2'
+}
+u2f.register(${this.props.appId}, [registerRequest], [],
+  (response) => {
+    console.log("Send 'response' to the server")
+  }
+)`)
+  }
+
 }

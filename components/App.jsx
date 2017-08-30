@@ -2,8 +2,10 @@ import React from 'react'
 import * as u2fUtils from '../lib/u2f'
 import Registration from './Registration.jsx'
 import Signing from './Signing.jsx'
-import styles from '../assets/layout.css'
 
+// Should always be the location of the origin.
+// Will be enforced by the Chrome extension, so changing it
+// will result in failure
 const appId = document.location.protocol + '//' + document.location.host
 
 let timeoutFn = null
@@ -17,7 +19,7 @@ export default class App extends React.Component {
       registration: {
         appId,
         challenge: 'RegisterChallenge',
-        regResponse: null,
+        response: null,
         parsedResponse: null,
       },
       signing: {
@@ -33,9 +35,7 @@ export default class App extends React.Component {
     this.onModeChange = this.onModeChange.bind(this)
   }
 
-  componentDidMount() {
-  }
-
+  // Show the timeout progess bar
   startTimeout(start, total) {
     if (this.state.timeout === 0) {
       this.setState({timeout: 100})
@@ -52,17 +52,20 @@ export default class App extends React.Component {
     }, 1000)
   }
 
+  // Stop the timeout progess bar
   stopTimeout() {
     this.setState({timeout: 0})
     clearTimeout(timeoutFn)
   }
 
   onModeChange({target}) {
-    console.log(target)
+    this.stopTimeout()
     if (target.name === 'sig') {
       this.setState({mode: 2})
-    } else {
+    } else if (target.name === 'reg') {
       this.setState({mode: 1})
+    } else {
+      this.setState({mode: 3})
     }
   }
 
@@ -90,24 +93,22 @@ export default class App extends React.Component {
     }
     u2f.register(appId, [registerRequest], [],
       (deviceResponse) => {
+        console.log('Response', deviceResponse)
         this.stopTimeout()
         let registration = Object.assign({}, this.state.registration)
         if (deviceResponse.errorCode) {
           console.log("ErrorCode:", deviceResponse.errorCode)
-          registration['errorCode'] = deviceResponse.errorCode
+          registration['response'] = {errorCode: deviceResponse.errorCode}
+        } else {
+          let parsedResponse = u2fUtils.parseRegistration(deviceResponse)
+          registration['response'] = deviceResponse
+          registration['parsedResponse'] = parsedResponse
           this.setState({registration})
-          return
+          let signing = Object.assign({}, this.state.signing)
+          signing['keyHandle'] = parsedResponse.keyHandle
+          this.setState({signing})
         }
-        console.log('Response')
-        console.log(deviceResponse)
-        console.log(u2fUtils.parseRegistration(deviceResponse))
-        let parsedResponse = u2fUtils.parseRegistration(deviceResponse)
-        registration['response'] = deviceResponse
-        registration['parsedResponse'] = parsedResponse
         this.setState({registration})
-        let signing = Object.assign({}, this.state.signing)
-        signing['keyHandle'] = parsedResponse.keyHandle
-        this.setState({signing})
       }, 30
     )
   }
@@ -122,20 +123,17 @@ export default class App extends React.Component {
     }
     u2f.sign(appId, this.state.signing.challenge, [registeredKey],
       (deviceResponse) => {
+        console.log('Response', deviceResponse)
         this.stopTimeout()
         let signing = Object.assign({}, this.state.signing)
         if (deviceResponse.errorCode) {
           console.log("ErrorCode:", deviceResponse.errorCode)
-          signing['errorCode'] = deviceResponse.errorCode
-          this.setState({signing})
-          return
+          signing['response'] = {errorCode: deviceResponse.errorCode}
+        } else {
+          let parsedResponse = u2fUtils.parseSignature(deviceResponse)
+          signing['response'] = deviceResponse
+          signing['parsedResponse'] = parsedResponse
         }
-        console.log('Response')
-        console.log(deviceResponse)
-        console.log(u2fUtils.parseSignature(deviceResponse))
-        let parsedResponse = u2fUtils.parseSignature(deviceResponse)
-        signing['response'] = deviceResponse
-        signing['parsedResponse'] = parsedResponse
         this.setState({signing})
       }, 30
     )
@@ -151,7 +149,7 @@ export default class App extends React.Component {
           onRegister={this.onRegister}
         />
       )
-    } else {
+    } else if (this.state.mode === 2) {
       return(
         <Signing
           {...this.state.signing}
@@ -160,6 +158,8 @@ export default class App extends React.Component {
           onSign={this.onSign}
         />
       )
+    } else {
+      return(<p>About holding page</p>)
     }
   }
 
@@ -168,6 +168,9 @@ export default class App extends React.Component {
       <div>
         <h1>U2F Debugger</h1>
         <div className="btn-group" data-toggle="buttons">
+          <label className={"btn btn-secondary " + (3 === this.state.mode ? 'active' : '') }>
+            <input type="checkbox" name="about" onChange={this.onModeChange} autoComplete="off"/> About
+          </label>
           <label className={"btn btn-secondary " + (1 === this.state.mode ? 'active' : '') }>
             <input type="checkbox" name="reg" onChange={this.onModeChange} autoComplete="off"/> Registration
           </label>

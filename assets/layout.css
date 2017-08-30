@@ -9,3 +9,16 @@ h2 {
 h4 {
   margin-top: 2rem;
 }
+
+h5 {
+  margin-top: 1.5rem;
+}
+
+.card {
+  margin-bottom: 1rem;
+  padding-top:1rem;
+}
+
+.card p {
+  margin-left: 2rem;
+}

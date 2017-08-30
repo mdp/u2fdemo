@@ -3,6 +3,12 @@ import Code from './Code.jsx'
 import {b64, b64d} from '../lib/u2f'
 import JSONList from './JSONList.jsx'
 
+const errorCodes = {
+  2: 'Bad Request',
+  4: 'Unknown Key Handle',
+  5: 'Timeout'
+}
+
 export default class Signing extends React.Component {
 
   prettyRawResponse() {
@@ -11,17 +17,15 @@ export default class Signing extends React.Component {
     }
   }
 
-  SampleRequest() {
-    return (`let registeredKey = {
-  keyHandle: '${this.props.keyHandle}',
-  version: 'U2F_V2'
-}
-u2f.sign(${this.props.appId}, '${this.props.challenge}', [registeredKey], [],
-  (response) => {
-    console.log("Send 'response' to the server")
+  // Scroll down to the results when they change
+  componentDidUpdate(prevProps) {
+    if (this.refs['sigResult']) {
+      if (!prevProps.response || prevProps.response.signatureData !== this.props.response.signatureData){
+        this.refs['sigResult'].scrollIntoView({block: 'end', behavior: 'smooth'})
+      }
+    }
   }
-)`)
-  }
+
 
   Button() {
     if (!(this.props.keyHandle && this.props.keyHandle.length > 0)) {
@@ -36,19 +40,37 @@ u2f.sign(${this.props.appId}, '${this.props.challenge}', [registeredKey], [],
     }
   }
 
-  Output() {
-    if (!this.props.parsedResponse) { return false }
-    return (
-      <div>
-        <h4>Raw Response</h4>
-        <Code output={JSON.stringify(this.props.response, null, 2)} />
-        <h4>signatureData Decoded</h4>
-        <p><small>Decode detailed <a href="https://fidoalliance.org/specs/fido-u2f-v1.0-nfc-bt-amendment-20150514/fido-u2f-raw-message-formats.html#registration-response-message-success">here (fidoalliance.org)</a></small></p>
-        <JSONList data={this.props.parsedResponse} />
-        <h4>clientData Decoded</h4>
-        <JSONList data={JSON.parse(b64d(this.props.response.clientData))} />
-      </div>
-    )
+  Result() {
+    if (this.props.response && this.props.response.errorCode) {
+      let errorCode = this.props.response.errorCode
+      return (
+        <div>
+          <h4 ref={'sigResult'}>Response</h4>
+          <Code output={JSON.stringify(this.props.response, null, 2)} />
+          <h4>Error</h4>
+          <p>ErrorCode: {errorCode}
+            {errorCodes[errorCode] ? ` - ${errorCodes[errorCode]}` : ''}
+          </p>
+        </div>
+      )
+    } else if (this.props.response) {
+      return (
+        <div>
+          <h4 ref={'sigResult'}>Response</h4>
+          <Code output={JSON.stringify(this.props.response, null, 2)} />
+          <h4>Response Decoded</h4>
+          <h5><var>signatureData</var></h5>
+          <div className="card">
+            <JSONList data={this.props.parsedResponse}/>
+            <p><small>Decode details can be found at <a target='_blank' href="https://fidoalliance.org/specs/fido-u2f-v1.0-nfc-bt-amendment-20150514/fido-u2f-raw-message-formats.html">fidoalliance.org</a></small></p>
+          </div>
+          <h5><var>clientData</var></h5>
+          <div className="card">
+            <JSONList data={JSON.parse(b64d(this.props.response.clientData))} />
+          </div>
+        </div>
+      )
+    }
   }
 
 
@@ -58,7 +80,7 @@ u2f.sign(${this.props.appId}, '${this.props.challenge}', [registeredKey], [],
       <div>
         <h2>Signing</h2>
         <ol>
-          <li>Enter a "KeyHandle" or, if you don't have on, go back to "Registration" to generate a new one</li>
+          <li>Enter a "KeyHandle" or, if you don't have one, go back to "Registration" and generate one</li>
           <li>Insert your U2F key</li>
           <li>Click 'Sign'</li>
           <li>Press the button on your U2F key</li>
@@ -80,7 +102,21 @@ u2f.sign(${this.props.appId}, '${this.props.challenge}', [registeredKey], [],
         </form>
         <h4>Sample JS for Request</h4>
         <Code output={this.SampleRequest()} />
-        {this.Output()}
+        {this.Result()}
       </div>)
   }
+
+  // Place this at the bottom since it breaks my code highlighter
+  SampleRequest() {
+    return (`let registeredKey = {
+  keyHandle: '${this.props.keyHandle}',
+  version: 'U2F_V2'
+}
+u2f.sign(${this.props.appId}, '${this.props.challenge}', [registeredKey], [],
+  (response) => {
+    console.log("Send 'response' to the server")
+  }
+)`)
+  }
+
 }

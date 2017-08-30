@@ -1,6 +1,8 @@
 import React from 'react'
 import styles from '../assets/code.css'
 
+// Prettyprint a JSON object into a nested list
+
 function toCapitalizedWords(name) {
   var words = name.match(/[A-Za-z][a-z]*/g)
 
@@ -20,13 +22,13 @@ function toList(data) {
     if (typeof item === 'object') {
       return (
         <div key={`sub${key}${keyIndex}`}>
-          <li key={`${key}${keyIndex}`}><strong>{toCapitalizedWords(key)}</strong></li>
+          <li key={`${key}${keyIndex}`}><strong>{toCapitalizedWords(key)}:</strong></li>
           <ul>{toList(item)}</ul>
         </div>
       )
     } else {
       return (
-        <li key={`${key}${keyIndex}`}><strong>{toCapitalizedWords(key)}</strong>: <code>{item}</code></li>
+        <li key={`${key}${keyIndex}`}><strong>{toCapitalizedWords(key)}:</strong> <code>{item}</code></li>
       )
     }
   })
@@ -34,7 +36,7 @@ function toList(data) {
 
 const JSONList = ({data}) => {
   return (
-    <ul>
+    <ul style={{"listStyleType":"none"}}>
       {toList(data)}
     </ul>
   )
