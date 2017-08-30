@@ -1,4 +1,6 @@
 language: node_js # don't install any environment
+node_js:
+  - latest
 
 script: bash ./deploy.sh
 env:

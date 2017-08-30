@@ -1,6 +1,7 @@
 import React from 'react'
 import {b64, b64d} from '../lib/u2f'
 import Code from './Code.jsx'
+import styles from '../assets/layout.css'
 
 export default class Registration extends React.Component {
 

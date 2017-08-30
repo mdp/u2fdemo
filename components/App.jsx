@@ -2,6 +2,7 @@ import React from 'react'
 import * as u2fUtils from '../lib/u2f'
 import Registration from './Registration.jsx'
 import Signing from './Signing.jsx'
+import styles from '../assets/layout.css'
 
 const appId = document.location.protocol + '//' + document.location.host
 
