@@ -2,7 +2,6 @@ language: node_js # don't install any environment
 node_js:
   - "8"
 
-before_install: openssl aes-256-cbc -K $encrypted_269f4ed9606d_key -iv $encrypted_269f4ed9606d_iv -in deploy_key.enc -out deploy_key -d
 script: bash ./deploy.sh
 env:
   global:
