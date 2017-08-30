@@ -18,3 +18,8 @@ pre {
   overflow-x: scroll;
   overflow-y: scroll;
 }
+
+code {
+  word-break: break-all;
+  font-size: 80%;
+}

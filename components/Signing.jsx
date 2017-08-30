@@ -1,5 +1,7 @@
 import React from 'react'
 import Code from './Code.jsx'
+import {b64, b64d} from '../lib/u2f'
+import JSONList from './JSONList.jsx'
 
 export default class Signing extends React.Component {
 
@@ -39,10 +41,12 @@ u2f.sign(${this.props.appId}, '${this.props.challenge}', [registeredKey], [],
     return (
       <div>
         <h4>Raw Response</h4>
-        <Code output={JSON.stringify(this.props.response, null, 2)}/>
-        <h4>signatureData</h4>
-        <p>Decode detailed <a href="https://fidoalliance.org/specs/fido-u2f-v1.0-nfc-bt-amendment-20150514/fido-u2f-raw-message-formats.html#authentication-response-message-success">here</a></p>
-        <Code output={JSON.stringify(this.props.parsedResponse, null, 2)}/>
+        <Code output={JSON.stringify(this.props.response, null, 2)} />
+        <h4>signatureData Decoded</h4>
+        <p><small>Decode detailed <a href="https://fidoalliance.org/specs/fido-u2f-v1.0-nfc-bt-amendment-20150514/fido-u2f-raw-message-formats.html#registration-response-message-success">here (fidoalliance.org)</a></small></p>
+        <JSONList data={this.props.parsedResponse} />
+        <h4>clientData Decoded</h4>
+        <JSONList data={JSON.parse(b64d(this.props.response.clientData))} />
       </div>
     )
   }
@@ -53,6 +57,12 @@ u2f.sign(${this.props.appId}, '${this.props.challenge}', [registeredKey], [],
     return (
       <div>
         <h2>Signing</h2>
+        <ol>
+          <li>Enter a "KeyHandle" or, if you don't have on, go back to "Registration" to generate a new one</li>
+          <li>Insert your U2F key</li>
+          <li>Click 'Sign'</li>
+          <li>Press the button on your U2F key</li>
+        </ol>
         <form>
           <div className="form-group">
             <label htmlFor="appId">AppId</label>
@@ -69,7 +79,7 @@ u2f.sign(${this.props.appId}, '${this.props.challenge}', [registeredKey], [],
           {this.Button()}
         </form>
         <h4>Sample JS for Request</h4>
-        <Code output={this.SampleRequest()}/>
+        <Code output={this.SampleRequest()} />
         {this.Output()}
       </div>)
   }

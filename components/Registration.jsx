@@ -1,6 +1,7 @@
 import React from 'react'
 import {b64, b64d} from '../lib/u2f'
 import Code from './Code.jsx'
+import JSONList from './JSONList.jsx'
 import styles from '../assets/layout.css'
 
 export default class Registration extends React.Component {
@@ -25,39 +26,6 @@ u2f.register(${this.props.appId}, [registerRequest], [],
 )`)
   }
 
-  RegistrationData() {
-    if (!this.props.parsedResponse) {
-      return false
-    }
-    return(
-      <div>
-        <dl className="row">
-          <dt className="col-sm-2">KeyHandle</dt>
-          <dd className="col-sm-10"><code>{this.props.parsedResponse.keyHandle}</code></dd>
-          <dt className="col-sm-2">Public Key</dt>
-          <dd className="col-sm-10"><code>{this.props.parsedResponse.publicKey}</code></dd>
-        </dl>
-        <dl className="row">
-          <dt className="col-sm-3">Certificate</dt>
-          <dd className="col-sm-9">
-            <dl className="row">
-              <dt className="col-sm-3">Issuer</dt>
-              <dd className="col-sm-9"> {this.props.parsedResponse.certificate.issuer} </dd>
-              <dt className="col-sm-3">Subject</dt>
-              <dd className="col-sm-9"> {this.props.parsedResponse.certificate.subject} </dd>
-              <dt className="col-sm-3">Serial</dt>
-              <dd className="col-sm-9"> {this.props.parsedResponse.certificate.serial} </dd>
-              <dt className="col-sm-3">Valid After:</dt>
-              <dd className="col-sm-9"> {this.props.parsedResponse.certificate.validityNotBefore} </dd>
-              <dt className="col-sm-3">Valid Before</dt>
-              <dd className="col-sm-9"> {this.props.parsedResponse.certificate.validityNotAfter} </dd>
-            </dl>
-          </dd>
-        </dl>
-      </div>
-    )
-  }
-
   Button() {
     if (this.props.timeout && this.props.timeout > 0) {
       return (
@@ -73,13 +41,12 @@ u2f.register(${this.props.appId}, [registerRequest], [],
     return (
       <div>
         <h4>Response</h4>
-        <Code output={JSON.stringify(this.props.response, null, 2)}/>
-        <h4>clientData Decoded</h4>
-        <p>A simple base64 decode resulting in a JSON string</p>
-        <Code output={JSON.stringify(JSON.parse(b64d(this.props.response.clientData)), null, 2)}/>
+        <Code output={JSON.stringify(this.props.response, null, 2)} />
         <h4>registrationData Decoded</h4>
-        <p>Decode detailed <a href="https://fidoalliance.org/specs/fido-u2f-v1.0-nfc-bt-amendment-20150514/fido-u2f-raw-message-formats.html#registration-response-message-success">here</a></p>
-        {this.RegistrationData()}
+        <p><small>Decode detailed <a href="https://fidoalliance.org/specs/fido-u2f-v1.0-nfc-bt-amendment-20150514/fido-u2f-raw-message-formats.html#registration-response-message-success">here (fidoalliance.org)</a></small></p>
+        <JSONList data={this.props.parsedResponse}/>
+        <h4>clientData Decoded</h4>
+        <JSONList data={JSON.parse(b64d(this.props.response.clientData))} />
       </div>
     )
   }
@@ -90,7 +57,11 @@ u2f.register(${this.props.appId}, [registerRequest], [],
       <div>
         <div className="content">
           <h2>Registration</h2>
-          <div>Insert your U2F key and click 'Register'</div>
+          <ol>
+            <li>Insert your U2F key</li>
+            <li>Click 'Register'</li>
+            <li>Press the button on your U2F key</li>
+          </ol>
           <form>
             <div className="form-group">
               <label htmlFor="appId">AppId</label>
@@ -103,9 +74,9 @@ u2f.register(${this.props.appId}, [registerRequest], [],
             {this.Button()}
           </form>
         </div>
-        {this.Output()}
         <h4>Sample JS for Request</h4>
-        <Code output={this.SampleRequest()}/>
+        <Code output={this.SampleRequest()} />
+        {this.Output()}
       </div>)
   }
 }
