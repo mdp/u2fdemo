@@ -1,0 +1,11 @@
+h2:not(:first-child) {
+  margin-top: 3rem;
+}
+
+h2 {
+  margin-top: 2rem;
+}
+
+h4 {
+  margin-top: 2rem;
+}
