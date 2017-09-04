@@ -1,12 +1,19 @@
 import React from 'react'
+
 import * as u2fUtils from '../lib/u2f'
+
 import Registration from './Registration.jsx'
 import Signing from './Signing.jsx'
+import About from './About.jsx'
 
-// Should always be the location of the origin.
-// Will be enforced by the Chrome extension, so changing it
-// will result in failure
+// Should always be the location of the origin.  Will be enforced by the Chrome extension, so changing it will result in failure
 const appId = document.location.protocol + '//' + document.location.host
+
+const routeMap = {
+  'about': '',
+  'reg': 'reg',
+  'sig': 'sig'
+}
 
 let timeoutFn = null
 
@@ -15,8 +22,7 @@ export default class App extends React.Component {
     super()
     this.state = {
       timeout: 0,
-      mode: 1,
-      registration: {
+      route: 'about', registration: {
         appId,
         challenge: 'RegisterChallenge',
         response: null,
@@ -32,7 +38,23 @@ export default class App extends React.Component {
     this.onSign = this.onSign.bind(this)
     this.updateRegState = this.updateRegState.bind(this)
     this.updateSigningState = this.updateSigningState.bind(this)
-    this.onModeChange = this.onModeChange.bind(this)
+    this.onRouteChange = this.onRouteChange.bind(this)
+  }
+
+  componentDidMount() {
+    this.setRoute(window.location.hash, true)
+  }
+
+  setRoute(route, initial) {
+    route = route.replace('/','')
+    let matchedRoute = routeMap[route]
+    if (matchedRoute) {
+      window.location.hash = route
+      this.setState({route: route})
+    } else {
+      window.location.hash = ''
+      this.setState({route: 'about'})
+    }
   }
 
   // Show the timeout progess bar
@@ -58,15 +80,9 @@ export default class App extends React.Component {
     clearTimeout(timeoutFn)
   }
 
-  onModeChange({target}) {
+  onRouteChange({target}) {
     this.stopTimeout()
-    if (target.name === 'sig') {
-      this.setState({mode: 2})
-    } else if (target.name === 'reg') {
-      this.setState({mode: 1})
-    } else {
-      this.setState({mode: 3})
-    }
+    this.setRoute(target.name)
   }
 
   updateRegState({target}) {
@@ -139,8 +155,8 @@ export default class App extends React.Component {
     )
   }
 
-  renderMode(){
-    if (this.state.mode === 1) {
+  renderRoute(){
+    if (this.state.route === 'reg') {
       return(
         <Registration
           {...this.state.registration}
@@ -149,7 +165,7 @@ export default class App extends React.Component {
           onRegister={this.onRegister}
         />
       )
-    } else if (this.state.mode === 2) {
+    } else if (this.state.route === 'sig') {
       return(
         <Signing
           {...this.state.signing}
@@ -159,26 +175,26 @@ export default class App extends React.Component {
         />
       )
     } else {
-      return(<p>About holding page</p>)
+      return <About />
     }
   }
 
   render() {
     return (
       <div>
-        <h1>U2F Debugger</h1>
+        <h1>U2F Demo</h1>
         <div className="btn-group" data-toggle="buttons">
-          <label className={"btn btn-secondary " + (3 === this.state.mode ? 'active' : '') }>
-            <input type="checkbox" name="about" onChange={this.onModeChange} autoComplete="off"/> About
+          <label className={"btn btn-secondary " + ('about' === this.state.route ? 'active' : '') }>
+            <input type="checkbox" name="about" onChange={this.onRouteChange} autoComplete="off"/> Readme
           </label>
-          <label className={"btn btn-secondary " + (1 === this.state.mode ? 'active' : '') }>
-            <input type="checkbox" name="reg" onChange={this.onModeChange} autoComplete="off"/> Registration
+          <label className={"btn btn-secondary " + ('reg' === this.state.route ? 'active' : '') }>
+            <input type="checkbox" name="reg" onChange={this.onRouteChange} autoComplete="off"/> Registration
           </label>
-          <label className={"btn btn-secondary " + (2 === this.state.mode ? 'active' : '') }>
-            <input type="checkbox" name="sig" onChange={this.onModeChange} autoComplete="off"/> Signing
+          <label className={"btn btn-secondary " + ('sig' === this.state.route ? 'active' : '') }>
+            <input type="checkbox" name="sig" onChange={this.onRouteChange} autoComplete="off"/> Signing
           </label>
         </div>
-        {this.renderMode()}
+        {this.renderRoute()}
       </div>)
   }
 }

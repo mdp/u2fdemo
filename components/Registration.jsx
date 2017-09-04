@@ -34,7 +34,7 @@ export default class Registration extends React.Component {
         <div className="progress">
         <div className="progress-bar progress-bar-striped progress-bar-animated" role="progressbar" aria-valuenow="75" aria-valuemin="0" aria-valuemax="100" style={{"width": this.props.timeout + "%"}}></div> </div>)
     } else {
-      return <button onClick={this.props.onRegister} > Register </button>
+      return <button onClick={this.props.onRegister} className="btn btn-primary" > Register </button>
     }
   }
 
@@ -95,7 +95,7 @@ export default class Registration extends React.Component {
             {this.Button()}
           </form>
         </div>
-        <h4>Sample JS for Request</h4>
+        <h4>Example JS for Request</h4>
         <Code output={this.SampleRequest()} />
         {this.Result()}
       </div>)

@@ -36,7 +36,7 @@ export default class Signing extends React.Component {
         <div className="progress">
         <div className="progress-bar progress-bar-striped progress-bar-animated" role="progressbar" aria-valuenow="75" aria-valuemin="0" aria-valuemax="100" style={{"width": this.props.timeout + "%"}}></div> </div>)
     } else {
-      return <button onClick={this.props.onSign} > Sign </button>
+      return <button onClick={this.props.onSign} className="btn btn-primary" > Sign </button>
     }
   }
 
@@ -100,7 +100,7 @@ export default class Signing extends React.Component {
           </div>
           {this.Button()}
         </form>
-        <h4>Sample JS for Request</h4>
+        <h4>Example JS for Request</h4>
         <Code output={this.SampleRequest()} />
         {this.Result()}
       </div>)
