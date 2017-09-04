@@ -61,7 +61,15 @@ export default class Registration extends React.Component {
           <h5><var>registrationData</var></h5>
           <div className="card">
             <JSONList data={this.props.parsedResponse}/>
-            <p><small>Decode details can be found at <a target='_blank' href="https://fidoalliance.org/specs/fido-u2f-v1.0-nfc-bt-amendment-20150514/fido-u2f-raw-message-formats.html">fidoalliance.org</a></small></p>
+            <p>Signature signs the following data:
+              <br />
+              <code>0x00</code> |
+              <code>sha256(<i>appId</i>)</code> |
+              <code>sha256(<i>challenge</i>)</code> |
+              <code><i>keyHandle</i></code> |
+              <code><i>publicKey</i></code>
+            </p>
+            <p><small>Decode and signature details can be found at <a target='_blank' href="https://fidoalliance.org/specs/fido-u2f-v1.0-nfc-bt-amendment-20150514/fido-u2f-raw-message-formats.html">fidoalliance.org</a></small></p>
           </div>
           <h5><var>clientData</var></h5>
           <div className="card">

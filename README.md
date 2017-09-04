@@ -7,7 +7,7 @@ The goal of this project is to show what's happening on the client end. You get 
 #### Prerequisites
 
 - A U2F Key
-  - [Yubikey](https://smile.amazon.com/Yubico-Y-123-FIDO-U2F-Security/dp/B00NLKA0D8/ref=sr_1_4?ie=UTF8&qid=1504479671&sr=8-4&keywords=u2f Yubikey)
+  - [Yubikey](https://smile.amazon.com/Yubico-Y-123-FIDO-U2F-Security/dp/B00NLKA0D8/ref=sr_1_4?ie=UTF8&qid=1504479671&sr=8-4&keywords=u2f)
   - [U2FZero](https://smile.amazon.com/U2F-Zero/dp/B01L9DUPK6/ref=sr_1_5?ie=UTF8&qid=1504479671&sr=8-5&keywords=u2f)
   - [Thetis](https://smile.amazon.com/Thetis-Universal-Authentication-Protection-SalesForce/dp/B06XHTKFH3/ref=sr_1_3?ie=UTF8&qid=1504479671&sr=8-3&keywords=u2f)
   - [Feitan](https://smile.amazon.com/Feitian-ePass-NFC-FIDO-Security/dp/B01M1R5LRD/ref=sr_1_7?ie=UTF8&qid=1504479671&sr=8-7&keywords=u2f)

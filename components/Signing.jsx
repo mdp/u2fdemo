@@ -62,7 +62,14 @@ export default class Signing extends React.Component {
           <h5><var>signatureData</var></h5>
           <div className="card">
             <JSONList data={this.props.parsedResponse}/>
-            <p><small>Decode details can be found at <a target='_blank' href="https://fidoalliance.org/specs/fido-u2f-v1.0-nfc-bt-amendment-20150514/fido-u2f-raw-message-formats.html">fidoalliance.org</a></small></p>
+            <p>Signature signs the following data:
+              <br />
+              <code>sha256(<i>appId</i>)</code> |
+              <code>0x01</code> |
+              <code><i>counter</i></code> |
+              <code>sha256(<i>challenge</i>)</code>
+            </p>
+            <p><small>Decode and signature details can be found at <a target='_blank' href="https://fidoalliance.org/specs/fido-u2f-v1.0-nfc-bt-amendment-20150514/fido-u2f-raw-message-formats.html">fidoalliance.org</a></small></p>
           </div>
           <h5><var>clientData</var></h5>
           <div className="card">
