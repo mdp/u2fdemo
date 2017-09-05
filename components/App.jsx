@@ -42,11 +42,15 @@ export default class App extends React.Component {
   }
 
   componentDidMount() {
-    this.setRoute(window.location.hash, true)
+    this.setRoute(window.location.hash)
+    window.onhashchange = () => {
+      this.stopTimeout()
+      this.setRoute(window.location.hash)
+    }
   }
 
-  setRoute(route, initial) {
-    route = route.replace('/','')
+  setRoute(route) {
+    route = route.replace('#','')
     let matchedRoute = routeMap[route]
     if (matchedRoute) {
       window.location.hash = route
