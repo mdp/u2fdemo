@@ -1,6 +1,6 @@
 ## Goals
 
-While U2F is a fairly simple and straightforward security standard, there hasn't been much written about it from a technical angle. Outside of the whitepapers, most guides simply focus on how to implement it into [insert framework] web application.
+While U2F is a fairly simple and straightforward security standard, there hasn't been much written about it from a technical angle. Outside of the whitepapers, most guides simply focus on how to implement it into your [insert framework] web application.
 
 The goal of this project is to show what's happening on the client end. You get to see details about the registration and signing process along with what information gets encoded into the repsonse.
 
