@@ -67,7 +67,7 @@ export default class Signing extends React.Component {
               <code>sha256(<i>appId</i>)</code> |
               <code>0x01</code> |
               <code><i>counter</i></code> |
-              <code>sha256(<i>challenge</i>)</code>
+              <code>sha256(<i>clientData</i>)</code>
             </p>
             <p><small>Decode and signature details can be found at <a target='_blank' href="https://fidoalliance.org/specs/fido-u2f-v1.0-nfc-bt-amendment-20150514/fido-u2f-raw-message-formats.html">fidoalliance.org</a></small></p>
           </div>

@@ -65,7 +65,7 @@ export default class Registration extends React.Component {
               <br />
               <code>0x00</code> |
               <code>sha256(<i>appId</i>)</code> |
-              <code>sha256(<i>challenge</i>)</code> |
+              <code>sha256(<i>clientData</i>)</code> |
               <code><i>keyHandle</i></code> |
               <code><i>publicKey</i></code>
             </p>
