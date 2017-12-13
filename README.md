@@ -16,6 +16,12 @@ To get started, grab your U2F key and ['Register'](#reg)
   - [Feitan](https://www.amazon.com/gp/product/B01M1R5LRD)
 - You're viewing this on Chrome or Firefox
 
+#### Resources
+
+- [U2F Raw message formats](https://fidoalliance.org/specs/fido-u2f-v1.0-nfc-bt-amendment-20150514/fido-u2f-raw-message-formats.html)
+- [U2F CLI](https://github.com/mdp/u2fcli)
+- [Yubico U2F Demo](https://demo.yubico.com/u2f)
+- [U2F API Polyfill](https://github.com/mastahyeti/u2f-api)
 
 #### Notes
 

@@ -115,7 +115,7 @@ export default class Registration extends React.Component {
   challenge: '${this.props.challenge}',
   version: 'U2F_V2'
 }
-u2f.register(${this.props.appId}, [registerRequest], [],
+u2f.register('${this.props.appId}', [registerRequest], [],
   (response) => {
     console.log("Send 'response' to the server")
   }
