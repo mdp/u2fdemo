@@ -15,6 +15,7 @@ To get started, grab your U2F key and ['Register'](#reg)
   - [Thetis](https://www.amazon.com/gp/product/B06XHTKFH3)
   - [Feitan](https://www.amazon.com/gp/product/B01M1R5LRD)
   - [Nitrokey FIDO U2F](https://shop.nitrokey.com/shop/product/nitrokey-fido-u2f-20)
+  - [Trezor](https://shop.trezor.io/)
 - You're viewing this on Chrome or Firefox
 
 #### Resources
